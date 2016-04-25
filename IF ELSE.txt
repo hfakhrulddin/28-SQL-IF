@@ -1,0 +1,62 @@
+--------SQL IF-ELSE----------BEGIN,END--------------------------------------------------------
+BEGIN TRANSACTION;
+GO
+IF @@TRANCOUNT = 0
+BEGIN
+    SELECT FirstName, MiddleName 
+    FROM Person.Person WHERE LastName = 'Adams';
+    ROLLBACK TRANSACTION;
+    PRINT N'Rolling back the transaction two times would cause an error.';
+END;
+ROLLBACK TRANSACTION;
+PRINT N'Rolled back the transaction.';
+GO
+/*
+Rolled back the tranaction.
+*/
+
+
+-------SQL IF-ELSE---STATMENT-------------------------------------------------------------------
+IF Boolean_expression { sql_statement | statement_block } 
+    [ ELSE { sql_statement | statement_block } ] 
+
+
+-------SQL IF-ELSE---EXAMPLE1--------------------------------------------------------------------
+IF 1 = 1 PRINT 'Boolean_expression is true.'
+ELSE PRINT 'Boolean_expression is false.' ;
+
+
+-------SQL IF-ELSE---EXAMPLE2--------------------------------------------------------------------
+IF 
+    (SELECT COUNT(*) FROM Production.Product WHERE Name LIKE 'Touring-3000%' ) > 5
+        PRINT 'There are more than 5 Touring-3000 bicycles.'
+    ELSE 
+        PRINT 'There are 5 or less Touring-3000 bicycles.' ;
+
+
+------------------------------------------------------------------------------------
+
+DECLARE @Number int;
+SET @Number = 50;
+IF @Number > 100
+   PRINT 'The number is large.';
+ELSE 
+   BEGIN
+      IF @Number < 10
+      PRINT 'The number is small.';
+   ELSE
+      PRINT 'The number is medium.';
+   END ;
+GO
+------------------------------------------------------------------------------------------
+WHILE (SELECT AVG(ListPrice) FROM Production.Product) < $300
+BEGIN
+   UPDATE Production.Product
+      SET ListPrice = ListPrice * 2
+   SELECT MAX(ListPrice) FROM Production.Product
+   IF (SELECT MAX(ListPrice) FROM Production.Product) > $500
+      BREAK
+   ELSE
+      CONTINUE
+END
+PRINT 'Too much for the market to bear';
